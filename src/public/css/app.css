@@ -1,0 +1,9 @@
+.card-course-item {
+  margin-top: 16px; }
+
+.count-delete-documents {
+  display: inline-block;
+  font-weight: 500;
+  background-color: #e72c45;
+  padding: 0px 5px;
+  border-radius: 50%; }

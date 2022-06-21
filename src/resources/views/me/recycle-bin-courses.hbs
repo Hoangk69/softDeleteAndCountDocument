@@ -1,0 +1,93 @@
+<div class="mt-4">
+    <div>
+      <h3>Recycle Bin</h3>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created at</th>
+            <th scope="col" style="text-align: center;">Option</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each courses}}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.createdAt}}</td>
+                <td style="text-align: center;">
+                    <a href="" class="btn btn-primary btn-restore" role="button" data-id="{{this._id}}">Restore</a>
+                    <a href="/courses/{{this._id}}/edit" class="btn btn-danger" role="button" data-id="{{this._id}}" data-toggle="modal" data-target="#exampleModal">Hard Delete</a>
+                    {{!-- <a href="" class="btn btn-link">Delete</a> --}}
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Empty Recycle Bin.
+                <a href="/me/stored/courses" class="btn-link">Back</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- confirm delete --}}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do you want to delete course ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="btn-delete" type="button" class="btn btn-danger">Hard Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ {{!-- form hindden delete --}}
+<form name="delete-form" method="POST"></form>
+<form name="restore-form" method="POST"></form>  
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var courseId;
+        var deleteForm = document.forms['delete-form'];
+        var restoreForm = document.forms['restore-form'];
+        var btnDelete = document.getElementById('btn-delete');
+        var btnRestore = $('.btn-restore');
+
+        $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        courseId = button.data('id');
+        console.log(courseId);
+        });
+      
+        btnDelete.onclick = function(){
+            deleteForm.action = '/courses/'+ courseId + '/hard?_method=DELETE';
+            deleteForm.submit();
+        }
+        
+        // restore btn clicked 
+        btnRestore.click(function(e){
+          e.preventDefault();
+          var courseId = $(this).data('id');
+          restoreForm.action = '/courses/'+ courseId + '/restore?_method=PATCH';
+          restoreForm.submit();
+        })
+    })
+    
+</script>
